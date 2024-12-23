@@ -18,8 +18,11 @@ struct Product: Decodable {
     let model: String?
     let brand: String?
     let id: String?
-    let isFavorite: Bool?
+    var isFavorite: Bool?
     var cardQuantity: Int?
+    var priceDouble: Double {
+        return Double(price ?? "0") ?? 0
+    }
     
     init(createdAt: String? = nil, name: String?, image: String?, price: String?, description: String? = nil, model: String? = nil, brand: String? = nil, id: String?, isFavorite: Bool? = nil, cardQuantity: Int? = nil) {
         self.createdAt = createdAt

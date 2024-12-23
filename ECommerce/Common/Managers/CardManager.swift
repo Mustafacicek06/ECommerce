@@ -32,7 +32,6 @@ class CartManager {
                 cart.count = Int16((cartItems[index].cardQuantity ?? 0) + (item.cardQuantity ?? 0))
             })
         } else {
-            let predicate = NSPredicate(format: "id == %@", item.id ?? "")
             CoreDataManager.shared.insert(CartModel.self, configure: { (cart) in
                 cart.id = item.id
                 cart.count = Int16(item.cardQuantity ?? 0)

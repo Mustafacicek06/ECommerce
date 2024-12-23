@@ -39,7 +39,6 @@ final class AppRouter {
 
         let nav4 = UINavigationController(rootViewController: account)
         nav4.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person"), tag: 3)
-
         tabBarController.viewControllers = [nav1, nav2, nav3, nav4]
         return tabBarController
     }

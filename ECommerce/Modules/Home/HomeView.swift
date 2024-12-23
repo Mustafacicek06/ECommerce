@@ -18,7 +18,7 @@ protocol HomeViewProtocol: AnyObject {
     func showAlert(title: String, message: String)
 }
 
-final class HomeView: UIViewController, LoadingShowable {
+final class HomeView: BaseView, LoadingShowable {
     var presenter: HomePresenterProtocol?
     
     private let searchBar: UISearchBar = {
@@ -29,14 +29,18 @@ final class HomeView: UIViewController, LoadingShowable {
             return searchBar
         }()
     
-    private let 
+    private let filterLabel: UILabel = {
+            let label = UILabel()
+            label.text = "Filters"
+            label.font = AppFonts.regularLarge
+            return label
+        }()
     
     private let filterButton: UIButton = {
             let button = UIButton()
             button.setTitle("Select Filter", for: .normal)
-            button.setTitleColor(.darkGray, for: .normal)
-            button.backgroundColor = .lightGray
-            button.layer.cornerRadius = 8
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .lightGray.withAlphaComponent(0.5)
             return button
         }()
     
@@ -57,7 +61,7 @@ final class HomeView: UIViewController, LoadingShowable {
         setupUI()
         initTabBarBadge()
         searchBar.delegate = self
-        title = "Home"
+       
         setupCartBadgeObserver()
     }
     
@@ -82,7 +86,6 @@ final class HomeView: UIViewController, LoadingShowable {
     }
     
     private func setupUI() {
-        view.backgroundColor = .white
         
         view.addSubview(errorView)
         errorView.centerX(to: view)
@@ -97,11 +100,16 @@ final class HomeView: UIViewController, LoadingShowable {
             searchBar.heightAnchor.constraint(equalToConstant: 40)
         ])
         
-        view.addSubview(filterButton)
-        filterButton.pinTopToBottom(of: searchBar, offset: 16)
-        filterButton.pinToLeading(of: view, offset: 16)
-        filterButton.pinToTrailing(of: view, offset: -16)
-        filterButton.setSize(height: 40)
+        let filterStackView = UIStackView(arrangedSubviews: [filterLabel, filterButton])
+        filterStackView.axis = .horizontal
+        filterStackView.spacing = 8
+        filterStackView.alignment = .center
+        filterStackView.distribution = .fill
+        view.addSubview(filterStackView)
+        filterStackView.pinTopToBottom(of: searchBar, offset: 16)
+        filterStackView.pinToLeading(of: view, offset: 16)
+        filterStackView.pinToTrailing(of: view, offset: -16)
+        filterButton.setSize(width: (view.frame.width - 48) / 2, height: 40)
         
         collectionView = CollectionView<Product, ProductCell>(
             cellClass: ProductCell.self,
@@ -111,6 +119,11 @@ final class HomeView: UIViewController, LoadingShowable {
                 cell.configure(with: product)
             }
         )
+        
+        collectionView?.didSelectItem = { [weak self] product in
+            let productDetailView = ProductDetailRouter.createModule(with: product)
+            self?.navigationController?.pushViewController(productDetailView, animated: true)
+        }
         
         if let collectionView = collectionView {
             view.addSubview(collectionView)

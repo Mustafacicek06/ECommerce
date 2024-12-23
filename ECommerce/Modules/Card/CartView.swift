@@ -23,10 +23,11 @@ class CartView: UIViewController {
     private let completeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Complete", for: .normal)
+        button.titleLabel?.font = AppFonts.boldLarge
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = AppColors.primaryColor
         button.layer.cornerRadius = 8
-
+        
         return button
     }()
 
@@ -60,7 +61,7 @@ class CartView: UIViewController {
         stackView.spacing = 16
         stackView.alignment = .center
         stackView.distribution = .fill
-
+        completeButton.setSize(width: 130, height: 40)
         footerView.addSubview(stackView)
         stackView.pinToSuperviewEdges(insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
 
@@ -74,7 +75,7 @@ class CartView: UIViewController {
 
     private func updateTotalPrice() {
         // price to ınt and sum
-        let total = cartItems.reduce(0) { $0 + (Int($1.price ?? "5") ?? 5) * ($1.cardQuantity ?? 0) }
+        let total = cartItems.reduce(0) { $0 + $1.priceDouble * Double($1.cardQuantity ?? 0) }
         totalLabel.text = "Total: \(total)₺"
     }
     

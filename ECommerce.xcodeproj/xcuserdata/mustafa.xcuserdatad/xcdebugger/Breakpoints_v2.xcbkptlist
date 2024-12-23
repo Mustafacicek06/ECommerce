@@ -7,16 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "09C7903E-1EDE-480B-BF78-C03DA1E56562"
+            uuid = "F8DB50ED-95D7-43F5-8D78-3B9FDAF4856B"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ECommerce/Modules/Card/CartView.swift"
+            filePath = "ECommerce/Modules/Home/Detail/ProductDetailPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
-            landmarkName = "cartDidUpdate()"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "addToCart()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "52846896-0252-47C3-83F7-6A399F8EE48A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ECommerce/Modules/Home/Detail/ProductDetailView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "addToCartTapped()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

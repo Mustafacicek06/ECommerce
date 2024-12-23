@@ -74,7 +74,7 @@ extension UIView {
     
     func pinToTop(of view: UIView, offset: CGFloat = 0) {
         translatesAutoresizingMaskIntoConstraints = false
-        topAnchor.constraint(equalTo: view.topAnchor, constant: offset).isActive = true
+        topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: offset).isActive = true
     }
     
     func pinToBottom(of view: UIView, offset: CGFloat = 0) {

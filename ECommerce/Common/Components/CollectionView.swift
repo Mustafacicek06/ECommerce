@@ -17,6 +17,7 @@ class CollectionView<T, Cell: UICollectionViewCell>: UIView, UICollectionViewDel
     
     // MARK: - Public Properties And Closures
     var willDisplayCell: ((Cell, IndexPath) -> Void)?
+    var didSelectItem: ((T) -> Void)?
     
     private let collectionView: UICollectionView
     
@@ -94,5 +95,9 @@ class CollectionView<T, Cell: UICollectionViewCell>: UIView, UICollectionViewDel
         if let cell = cell as? Cell {
             willDisplayCell?(cell, indexPath)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        didSelectItem?(items[indexPath.item])
     }
 }
