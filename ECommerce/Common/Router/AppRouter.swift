@@ -24,7 +24,7 @@ final class AppRouter {
     private func createTabBarController() -> UITabBarController {
         let home = HomeRouter.createModule()
         let card = CartRouter.createModule()
-        let favorite = HomeRouter.createModule()
+        let favorite = FavoriteRouter.createModule()
         let account = HomeRouter.createModule()
 
         let nav1 = UINavigationController(rootViewController: home)

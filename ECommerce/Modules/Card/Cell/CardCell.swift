@@ -60,6 +60,8 @@ class CardCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        // cell click disabled
+        selectionStyle = .none
     }
 
     required init?(coder: NSCoder) {

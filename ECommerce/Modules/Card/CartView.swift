@@ -74,7 +74,7 @@ class CartView: UIViewController {
 
     private func updateTotalPrice() {
         // price to ınt and sum
-        let total = cartItems.reduce(0) { $0 + Int($1.price) * $1.cardQuantity }
+        let total = cartItems.reduce(0) { $0 + (Int($1.price ?? "5") ?? 5) * ($1.cardQuantity ?? 0) }
         totalLabel.text = "Total: \(total)₺"
     }
     

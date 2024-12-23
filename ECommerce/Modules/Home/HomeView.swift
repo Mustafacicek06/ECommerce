@@ -29,6 +29,8 @@ final class HomeView: UIViewController, LoadingShowable {
             return searchBar
         }()
     
+    private let 
+    
     private let filterButton: UIButton = {
             let button = UIButton()
             button.setTitle("Select Filter", for: .normal)
@@ -53,7 +55,9 @@ final class HomeView: UIViewController, LoadingShowable {
         view.backgroundColor = .systemBackground
         presenter?.viewDidLoad()
         setupUI()
-       
+        initTabBarBadge()
+        searchBar.delegate = self
+        title = "Home"
         setupCartBadgeObserver()
     }
     
@@ -68,6 +72,10 @@ final class HomeView: UIViewController, LoadingShowable {
     }
     
     @objc private func updateCartBadge() {
+        initTabBarBadge()
+    }
+    
+    private func initTabBarBadge() {
         let totalItems = CartManager.shared.totalItemCount
         let cartTabBarItem = tabBarController?.tabBar.items?[safe: 1] // Cart'ın olduğu tab
         cartTabBarItem?.badgeValue = totalItems > 0 ? "\(totalItems)" : nil
@@ -80,7 +88,6 @@ final class HomeView: UIViewController, LoadingShowable {
         errorView.centerX(to: view)
         errorView.centerY(to: view)
         
-        // Search Bar
         view.addSubview(searchBar)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -90,17 +97,12 @@ final class HomeView: UIViewController, LoadingShowable {
             searchBar.heightAnchor.constraint(equalToConstant: 40)
         ])
         
-        // Filter Button
         view.addSubview(filterButton)
-        filterButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            filterButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
-            filterButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            filterButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            filterButton.heightAnchor.constraint(equalToConstant: 40)
-        ])
+        filterButton.pinTopToBottom(of: searchBar, offset: 16)
+        filterButton.pinToLeading(of: view, offset: 16)
+        filterButton.pinToTrailing(of: view, offset: -16)
+        filterButton.setSize(height: 40)
         
-        // Collection View
         collectionView = CollectionView<Product, ProductCell>(
             cellClass: ProductCell.self,
             itemSize: CGSize(width: (view.frame.width - 48) / 2, height: 300),
@@ -112,13 +114,10 @@ final class HomeView: UIViewController, LoadingShowable {
         
         if let collectionView = collectionView {
             view.addSubview(collectionView)
-            collectionView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                collectionView.topAnchor.constraint(equalTo: filterButton.bottomAnchor, constant: 16),
-                collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-                collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-                collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-            ])
+            collectionView.pinTopToBottom(of: filterButton, offset: 16)
+            collectionView.pinToLeading(of: view)
+            collectionView.pinToTrailing(of: view)
+            collectionView.pinToBottom(of: view)
         }
     }
     
@@ -145,9 +144,13 @@ final class HomeView: UIViewController, LoadingShowable {
 
 extension HomeView: ProductCellDelegate {
     func didTapFavoriteButton(in cell: ProductCell) {
-        guard let indexPath = collectionView else { return }
-        //products[indexPath.item].isFavorite.toggle() // Favori durumunu güncelle
-        //print("Favori durum güncellendi: \(products[indexPath.item])")
+        guard let indexPath = collectionView?.getCollectionView().indexPath(for: cell), let model = presenter?.product(indexPath.row) else { return }
+        CoreDataManager.shared.insert(Favorites.self) { product in
+            product.id = model.id
+            product.name = model.name
+            product.price = model.price
+            product.imageURL = model.image
+        }
     }
     
     func didTapAddToCartButton(in cell: ProductCell) {
@@ -162,6 +165,11 @@ extension HomeView: ProductCellDelegate {
     
 }
 
+extension HomeView: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        presenter?.searchProducts(searchText)
+    }
+}
 extension HomeView: HomeViewProtocol, PopupShowable {
     func showAlert(title: String, message: String) {
         showPopup(title: title, message: message)

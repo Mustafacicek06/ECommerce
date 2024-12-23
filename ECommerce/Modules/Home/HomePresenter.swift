@@ -11,6 +11,7 @@ protocol HomePresenterProtocol {
     var numberOfItems: Int { get }
     func viewDidLoad()
     func product(_ index: Int) -> Product?
+    func searchProducts(_ text: String)
     func pullToRefresh()
     func viewWillDisplay()
     func viewWillLayoutSubviews()
@@ -35,6 +36,14 @@ final class HomePresenter {
 }
 
 extension HomePresenter: HomePresenterProtocol {
+    func searchProducts(_ text: String) {
+        guard !text.isEmpty else {
+            view.reloadData(items: products)
+            return }
+        let filteredProducts = products.filter { $0.name?.lowercased().contains(text.lowercased()) ?? false }
+        view.reloadData(items: filteredProducts)
+    }
+    
     func viewWillLayoutSubviews() {
         view.prepareTableView()
     }

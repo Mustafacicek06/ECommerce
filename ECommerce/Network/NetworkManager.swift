@@ -8,7 +8,6 @@
 
 import Foundation
 
-/// HTTP Method Enum
 enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
@@ -16,7 +15,6 @@ enum HTTPMethod: String {
     case delete = "DELETE"
 }
 
-/// Custom Error Enum for Networking
 enum NetworkError: Error {
     case invalidURL
     case noData
@@ -25,7 +23,6 @@ enum NetworkError: Error {
     case unknown(Error)
 }
 
-/// NetworkManager Protocol (Interface)
 protocol NetworkManagerProtocol {
     func request<T: Decodable>(
         path: String,
@@ -36,18 +33,13 @@ protocol NetworkManagerProtocol {
         completion: @escaping (Result<T, NetworkError>) -> Void
     )
 }
-import Foundation
 
 final class NetworkManager: NetworkManagerProtocol {
-    
-    // Singleton
     static let shared = NetworkManager()
     private init() { }
     
-    // Base URL
     private let baseURL = "https://5fc9346b2af77700165ae514.mockapi.io"
     
-    /// Generic Request Method
     func request<T: Decodable>(
         path: String,
         method: HTTPMethod,
@@ -66,12 +58,10 @@ final class NetworkManager: NetworkManagerProtocol {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
         
-        // Adding headers
         headers?.forEach { key, value in
             urlRequest.addValue(value, forHTTPHeaderField: key)
         }
         
-        // Adding body for POST/PUT
         if let parameters = parameters {
             do {
                 urlRequest.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
@@ -84,7 +74,6 @@ final class NetworkManager: NetworkManagerProtocol {
             }
         }
         
-        // Perform network request
         let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
             if let error = error {
                 DispatchQueue.main.async {
